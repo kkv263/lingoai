@@ -1,35 +1,30 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from '$app/forms';
+	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
  	import SendIcon from '$lib/assets/SendIcon.svelte';
   import LanguageIcon from '$lib/assets/LanguageIcon.svelte';
-    import AudioIcon from '$lib/assets/AudioIcon.svelte';
+  import AudioIcon from '$lib/assets/AudioIcon.svelte';
 
 	export let data;
+	export let form;
 
-	let inputValue:string = ''; // or hsv or hex
-  let translatedValue:string = '';
   let audio:any;
+	let loading = false;
+	let translateLoading = -1;
+	let messagesContainer: HTMLDivElement;
+	let messagesActiveTabs = [ ...Array(data.messages?.length).keys() ].map( i => 0);
 
-	const translateValue = async() => {
-		// try {
-		// 	await fetch('/api/v1/translate', {
-		// 		method: 'POST',
-		// 		body: JSON.stringify({
-		// 			text: inputValue
-		// 		})
-		// 	}).then((res) => res.json()).then((data) => {
-    //     translatedValue = data.text;
-    //   });
-		// }
-		// catch (error) {
-		// 	console.error(error);
-		// }
+	onMount(() => {
+		scrollToBottom();
+	})
 
-    // if (translatedValue) {
-    //   japaneseAudio(translatedValue);
-    // }
-	};
+	const scrollToBottom = () => {
+		messagesContainer.scroll({
+			top: messagesContainer.scrollHeight,
+			behavior: 'smooth',
+		});
+	}
 
 	const japaneseAudio = async(val:string) => {
     try {
@@ -48,7 +43,6 @@
 		}
   }
 
-	let loading = false;
 	const handleSignOut: SubmitFunction = () => {
 		loading = true;
 		return async ({ update }) => {
@@ -60,56 +54,91 @@
 	const handleSubmit: SubmitFunction = () => {
 		loading = true;
 		return async ({ update }) => {
-			loading = false;
 			update();
-			inputValue = ''
+			loading = false;
+			messagesActiveTabs = [...messagesActiveTabs, 0];
+			// TODO: Find a better way to scroll to bottom after message is sent
+			setTimeout(() => {
+				scrollToBottom();
+			}, 500);
 		}
 	}
 
-	const scrollToBottom = (node: HTMLFormElement, messages:any) => {
-		const scroll = () => node.scroll({
-			top: node.scrollHeight,
-			behavior: 'smooth',
-		});
-		scroll();
+	const udpateTranslation:SubmitFunction = () => {
+		return async ({ update }) => {
+			update({reset:false});
+			translateLoading = -1;
+		}
+	}
 
-		return { update: scroll }
-	};
+	const translateTab = async(index:number) => {
+		if (!data.messages) { return ;}
+		const currentMsg = data.messages[index]
+
+		if (!currentMsg.translated_content) {
+			translateLoading = index;
+		}
+
+		messagesActiveTabs[index] = messagesActiveTabs[index] !== 0 ? 0 : 1;
+	}
 
 </script>
 
 <div class="">
   <h1>homepage</h1>
-  <div>You are signed in</div>
+  <div>You are signed in</div> 
 
-	<form class="messages__container"
-	method="post"
-	action="?/send"
-	use:enhance={handleSubmit}
-	use:scrollToBottom={data.messages}>
+	<div>{JSON.stringify(form)}</div>
+
+	<div class="messages__container"
+	bind:this={messagesContainer}>
 		<ul class="messages__list" >
 			{#if data.messages}
-				{#each data.messages as message (message.id)}
-						<li class={`message__msg message__msg--${message.sender_id != 0 ? 'left' : 'right'}`} in:fly="{{ y: 50, duration: 500 }}" out:fade>
+				{#each data.messages as {sender_id, content, translated_content, created_at, id }, i (id)}
+						<li class={`message__msg message__msg--${sender_id != 0 ? 'left' : 'right'}`} in:fly="{{ y: 50, duration: 500 }}" out:fade>
 							<span class="message__options">
-								<LanguageIcon width={'24px'} height={'24px'}/>
-								<AudioIcon width={'24px'} height={'24px'}/>
+								<form 
+									method="post"
+									action="?/updatetranslation"
+									use:enhance={udpateTranslation}
+									on:submit|preventDefault={() => translateTab(i)}
+								>
+									<button title="Translate Text" type="submit"><LanguageIcon width={'16px'} height={'16px'}/></button>
+									<input id="transId" name="transId" type="text" hidden value={id} />
+									<input id="transContent" name="transContent" type="text" hidden value={content} />
+									<input id="transTranslated" name="transTranslated" type="text" hidden value={translated_content} />
+								</form>
+								<form action="">
+									<button title="Listen in Japanese" type="button"><AudioIcon width={'16px'} height={'16px'}/></button>
+								</form>
 							</span>
-							<span class="message__content">{message.content}</span>
-							<span class="message__translated">{message.translated_content}</span>
-							<span class="message__time">{new Date(message.created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
+							<div class:message__content--loading="{translateLoading === i}" class="message__content">
+								<div class="message__loading">
+									<span></span>
+									<span></span>
+									<span></span>
+								</div>
+								<span class:message__item--active="{messagesActiveTabs[i] === 0}" class="message__original message__item">{content}</span>
+								<span class:message__item--active="{messagesActiveTabs[i] === 1}" class="message__translated message__item">
+									{#if translated_content}{translated_content}{/if}
+								</span>
+							</div>
+							<span class="message__time">{new Date(created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
 						</li>
 				{/each}
 			{/if}
 		</ul>
-		<div class="message__input-container">
-			<input id="msg" name="msg" class="message__input" bind:value={inputValue}>
+		<form class="message__input-container"
+			method="post"
+			action="?/send"
+			use:enhance={handleSubmit}>
+			<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom}>
 			<button class="message__send" type="submit" title="Send Message">
 				<span>Send</span>
 				<SendIcon width={'24px'} height={'24px'}/>
 			</button>
-		</div>
-	</form>
+		</form>
+	</div>
 
 	{#if audio}
 		<audio autoPlay controls>
@@ -195,19 +224,28 @@
 		transition: all .3s ease;
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
-		&:global svg { 
-			cursor: pointer;
+
+		button {
+			border: 0;
+			background: transparent;
+			border-radius: 100%;
 			transition: all .3s ease;
 			padding: 4px;
-
-			&:hover {
-				background: #fff;
-				stroke: #222;
-				border-radius: 100%;
-			}
+			cursor: pointer;
+			color: #fff;
 
 			&:not(:last-child) {
 				margin-right: 8px;
+			}
+
+			&:hover {
+				background: #fff;
+				border-radius: 100%;
+
+				&:global svg { 
+					stroke: #222;
+					transition: all .3s ease;
+				}
 			}
 		}
 	}
@@ -217,10 +255,50 @@
 		font-size: 14px;
 	}
 
+	.message__loading {
+		display: none;
+	}
+
 	.message__content {
 		background-color: #347FC4;
 		border-radius: 12px;
 		padding: 16px;
+		min-width: 84px;
+		min-height: 54px;
+		text-align: center;
+
+		&--loading {
+			.message__loading {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				span {
+					display: block;
+					width: 10px;
+					height: 10px;
+					border-radius: 50%;
+					background-color: #fff;
+					margin: 5px 4px;
+					animation: typing 1000ms ease-in-out infinite;
+    			animation-delay: 3600ms;
+
+					&:nth-child(1) {
+						animation-delay: 0ms;
+					}
+						
+					&:nth-child(2) {
+						animation-delay: 333ms;
+					}
+						
+					&:nth-child(3) {
+						animation-delay: 666ms;
+					}
+				}
+			}
+			.message__item {
+				display: none;
+			}
+		}
 	}
 
 	.message__input-container {
@@ -239,7 +317,7 @@
 		width: 100%;
 		background-color: #16171B;
 		border: 0;
-		padding: 8px 64px 8px 16px;
+		padding: 8px 120px 8px 16px;
 		min-height: 48px;
 		border-radius: 12px;
 		color: #fff;
@@ -277,17 +355,23 @@
 
 			&:global svg {
 				transform: translateX(-20px);
-				// animation: tilt-shaking .3s linear infinite;
 				opacity: .8;
     	}
 		}
 	}
 
-	@keyframes tilt-shaking {
-		0% { transform: rotate(0deg); }
-		25% { transform: rotate(5deg); }
-		50% { transform: rotate(0eg); }
-		75% { transform: rotate(-5deg); }
-		100% { transform: rotate(0deg); }
+	.message__item {
+		display: none;
+
+		&--active {
+			display: block;
+		}
 	}
+	@keyframes typing {
+		0% {scale:1;}
+		33% {scale:1;}
+		50% {scale:1.4;}
+		100% {scale:1;}
+	}
+
 </style>

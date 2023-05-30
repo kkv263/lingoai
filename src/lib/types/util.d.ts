@@ -1,3 +1,3 @@
-type encodedParams = {
+export type EncodedParams = {
   [key:string]: string; 
 }
