@@ -1,3 +1,3 @@
 export type EncodedParams = {
-  [key:string]: string; 
+  [key:string]: string | boolean; 
 }
