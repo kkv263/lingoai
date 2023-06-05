@@ -3,14 +3,16 @@
   import LanguageIcon from '$lib/assets/LanguageIcon.svelte';
   import AudioIcon from '$lib/assets/AudioIcon.svelte';
   import { enhance, type SubmitFunction } from '$app/forms';
+  import { isJapanese } from 'wanakana';
 
 	export let sender_id:number;
 	export let content:string;
-	export let translated_content:string;
+	export let content_target_lang:string;
+	export let content_source_lang:string;
 	export let created_at:string;
   export let id:string;
   export let i:number;
-  let activeTab:number = sender_id === 0 ? 0 : 1;
+  let activeTab:number = 0
 
   let translateLoading = -1;
 
@@ -18,15 +20,14 @@
 		return async ({ update }) => {
 			update({reset:false});
 			translateLoading = -1;
+			activeTab = activeTab !== 0 ? 0 : 1;
 		}
 	}
 
   const translateTab = async(index:number) => {
-		if (!translated_content) {
+		if (!content_target_lang || !content_source_lang) {
 			translateLoading = index;
 		}
-
-    activeTab = activeTab !== 0 ? 0 : 1;
 	}
   
 </script>
@@ -42,7 +43,7 @@
       <button title="Translate Text" type="submit"><LanguageIcon width={'16px'} height={'16px'}/></button>
       <input id="transId" name="transId" type="text" hidden value={id} />
       <input id="transContent" name="transContent" type="text" hidden value={content} />
-      <input id="transTranslated" name="transTranslated" type="text" hidden value={translated_content} />
+      <input id="transTranslated" name="transTranslated" type="text" hidden value={!content_source_lang || !content_target_lang} />
     </form>
     <form action="">
       <button title="Listen in Japanese" type="button"><AudioIcon width={'16px'} height={'16px'}/></button>
@@ -58,7 +59,11 @@
       {#if content}{content}{/if}
     </span>
     <span class:message__item--active="{activeTab === 1}" class="message__translated message__item">
-      {#if translated_content}{translated_content}{/if}
+      {#if isJapanese(content) && content_source_lang}
+				{content_source_lang}
+			{:else if !isJapanese(content) && content_target_lang}
+				{content_target_lang}
+			{/if}
     </span>
   </div>
   <span class="message__time">{new Date(created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
@@ -157,7 +162,10 @@
 		padding: 16px;
 		min-width: 84px;
 		min-height: 54px;
-		text-align: center;
+		text-align: left;
+		max-width: 300px;
+		display: flex;
+		justify-content: center;
 
 		&--loading {
 			.message__loading {

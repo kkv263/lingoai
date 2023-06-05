@@ -60,23 +60,6 @@
 			}, 500);
 		}
 	}
-
-	const aiRequest = async() => {
-		try {
-			await fetch('/api/v1/ai/speak', {
-				method: 'POST',
-				body: JSON.stringify({
-					'text': messagesInput.value,
-				})
-			}).then((res) => res.json()).then((data) => {
-        const {text, translated} = data;
-      });
-		}
-		catch (error) {
-			console.error(error);
-		}
-	}
-
 </script>
 
 <div class="">
@@ -98,8 +81,7 @@
 		<form class="message__input-container"
 			method="post"
 			action="?/send"
-			use:enhance={handleSubmit}
-			on:submit|preventDefault={() => aiRequest()}>
+			use:enhance={handleSubmit}>
 			<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom} bind:this={messagesInput}>
 			<button class="message__send" type="submit" title="Send Message">
 				<span>Send</span>
