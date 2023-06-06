@@ -4,14 +4,17 @@
  	import SendIcon from '$lib/assets/SendIcon.svelte';
 	import { tokenize } from 'wanakana';
   import Message from '$lib/components/Message.svelte';
+	import SideDrawer from '$lib/components/SideDrawer.svelte';
 
 	export let data;
-	export let form;
+	// export let form;
 
   let audio:any;
 	let loading = false;
 	let messagesContainer: HTMLDivElement;
+	let chatContainer: HTMLDivElement;
 	let messagesInput: HTMLInputElement;
+	let speakerName: string = ' うちは サスケ';
 
 	onMount(() => {
 		scrollToBottom();
@@ -60,34 +63,42 @@
 			}, 500);
 		}
 	}
+
+	const handleCollapse = (event:any) => {
+		chatContainer.setAttribute('data-collapsed', event.detail.collapsed);
+	}
 </script>
 
 <div class="">
-  <h1>homepage</h1>
-  <div>You are signed in</div> 
-
+  <!-- <h1>homepage</h1>
+  <div>You are signed in</div>  -->
+<!-- 
 	<div>{JSON.stringify(form)}</div>
-	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div>
-
-	<div class="messages__container"
-	bind:this={messagesContainer}>
-		<ul class="messages__list" >
-			{#if data.messages}
-				{#each data.messages as message, i }
-					<Message {...message} i={i}/>
-				{/each}
-			{/if}
-		</ul>
-		<form class="message__input-container"
-			method="post"
-			action="?/send"
-			use:enhance={handleSubmit}>
-			<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom} bind:this={messagesInput}>
-			<button class="message__send" type="submit" title="Send Message">
-				<span>Send</span>
-				<SendIcon width={'24px'} height={'24px'}/>
-			</button>
-		</form>
+	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div> -->
+	<SideDrawer on:collapse={handleCollapse}/>
+	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
+		<div class="messages__container" bind:this={messagesContainer}>
+			<div class="chat__top">
+				<div>Chatting with: {speakerName}</div>
+			</div>
+			<ul class="messages__list" >
+				{#if data.messages}
+					{#each data.messages as message, i }
+						<Message {...message} i={i}/>
+					{/each}
+				{/if}
+			</ul>
+			<form class="message__input-container"
+				method="post"
+				action="?/send"
+				use:enhance={handleSubmit}>
+				<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom} bind:this={messagesInput}>
+				<button class="message__send" type="submit" title="Send Message">
+					<span>Send</span>
+					<SendIcon width={'24px'} height={'24px'}/>
+				</button>
+			</form>
+		</div>
 	</div>
 
 	<!-- {#if audio} -->
@@ -96,20 +107,47 @@
 		</audio>  -->
 	<!-- {/if} -->
 
-	<form method="post" action="?/signout" use:enhance={handleSignOut}>
+	<!-- <form method="post" action="?/signout" use:enhance={handleSignOut}>
 		<div>
 			<button class="button block" disabled={loading}>Sign Out</button>
 		</div>
-	</form>
+	</form> -->
 </div>
 
 <style lang="scss">
+	.chat__container {
+		margin-left: 64px;
+		width: calc(100% - 64px);
+		height: 100vh;
+		position: relative;
+		transition: all .3s ease;
+		
+		&[data-collapsed=false] {
+			margin-left: 208px;
+			width: calc(100% - 208px);
+		}
+	}
+	
+	.chat__top {
+		background-color: #000;
+		min-height: 48px;
+		display: flex;
+		align-items: center;
+		padding: 8px;
+		position: sticky;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		div {
+			color: #fff;
+		}
+	}
+	
 	.messages__container {
-		max-width: 768px;
 		margin: 0 auto;
 		width: 100%;
 		background-color: #222;
-		height: 480px;
+		height: 100vh;
 		overflow: auto;
 		position: relative;
 	}
