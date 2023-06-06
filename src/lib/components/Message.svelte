@@ -13,6 +13,7 @@
   export let id:string;
   export let i:number;
   let activeTab:number = 0
+	let audio:any;
 
   let translateLoading = -1;
 
@@ -29,6 +30,23 @@
 			translateLoading = index;
 		}
 	}
+
+	const japaneseAudio = async(val:string) => {
+    try {
+			await fetch('/api/v1/tts/jp', {
+				method: 'POST',
+				body: JSON.stringify({
+					'text': val,
+          'speaker': 47,
+				})
+			}).then((res) => res.json()).then((data) => {
+        audio = data.file;
+      });
+		}
+		catch (error) {
+			console.error(error);
+		}
+  }
   
 </script>
 
@@ -66,6 +84,12 @@
 			{/if}
     </span>
   </div>
+
+	<!-- {#if audio} -->
+		<!-- <audio autoPlay controls>
+			<source src='{`audio/wgu3sq-jp.wav`}' type='audio/wav' />
+		</audio>  -->
+	<!-- {/if} -->
   <span class="message__time">{new Date(created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
 </li>
 
@@ -163,7 +187,7 @@
 		min-width: 84px;
 		min-height: 54px;
 		text-align: left;
-		max-width: 300px;
+		max-width: 320px;
 		display: flex;
 		justify-content: center;
 

@@ -27,23 +27,6 @@
 		});
 	}
 
-	const japaneseAudio = async(val:string) => {
-    try {
-			await fetch('/api/v1/tts/jp', {
-				method: 'POST',
-				body: JSON.stringify({
-					'text': val,
-          'speaker': 47,
-				})
-			}).then((res) => res.json()).then((data) => {
-        audio = data.file;
-      });
-		}
-		catch (error) {
-			console.error(error);
-		}
-  }
-
 	const handleSignOut: SubmitFunction = () => {
 		loading = true;
 		return async ({ update }) => {
@@ -73,9 +56,8 @@
   <!-- <h1>homepage</h1>
   <div>You are signed in</div>  -->
 <!-- 
-	<div>{JSON.stringify(form)}</div>
 	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div> -->
-	<SideDrawer on:collapse={handleCollapse}/>
+	<SideDrawer on:collapse={handleCollapse} {...data.profiles}/>
 	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
@@ -101,12 +83,6 @@
 		</div>
 	</div>
 
-	<!-- {#if audio} -->
-		<!-- <audio autoPlay controls>
-			<source src='{`audio/wgu3sq-jp.wav`}' type='audio/wav' />
-		</audio>  -->
-	<!-- {/if} -->
-
 	<!-- <form method="post" action="?/signout" use:enhance={handleSignOut}>
 		<div>
 			<button class="button block" disabled={loading}>Sign Out</button>
@@ -123,8 +99,8 @@
 		transition: all .3s ease;
 		
 		&[data-collapsed=false] {
-			margin-left: 208px;
-			width: calc(100% - 208px);
+			margin-left: 360px;
+			width: calc(100% - 360px);
 		}
 	}
 	

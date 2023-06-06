@@ -1,20 +1,23 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from 'svelte';
-  // import { supabase } from "$lib/_includes/supabaseClient";
-  // import { onMount } from "svelte";
-  // import { user } from "$lib/stores/sessionStore";
-  // import { actionModalState } from "$lib/stores/actionModalStore";
   import PlusCircle from "$lib/assets/PlusCircle.svelte";
   import ArrowRight from "$lib/assets/ArrowRight.svelte";
-  // import Cog from "$lib/components/icons/Cog.svelte";
-  // import PencilSquare from "$lib/components/icons/PencilSquare.svelte";
+  import Cog from "$lib/assets/Cog.svelte";
+
+  export let username:string = "";
+	export let display_name:string = "";
+	export let avatar_url:string = "";
 
   const dispatch = createEventDispatcher();
 
+  // TODO: Add signout button
+  // TODO: Add settings functionality
+  // TODO: close settings menu on outside click.
+
   // let loading:boolean;
   let collapsed:boolean = false;
-  // let displayName:string;
+  let menu_open:boolean = false;
 
   const drawerItems = [
     {
@@ -22,33 +25,6 @@
       text: 'New Chat',
     },
   ]
-
-  // onMount(() => {
-  //   getProfile();
-  // })
-
-
-  // const getProfile = async () => {
-  //   try {
-  //     loading = true;
-  //     const user = supabase.auth.user();
-  //     let { data, error, status } = await supabase
-  //       .from("profiles")
-  //       .select(`username, display_name`)
-  //       .eq("id", user?.id)
-  //       .single();
-
-  //     if (error && status !== 406) throw error;
-  //     if (data) {
-  //       displayName = data.display_name;
-  //     }
-
-  //   } catch (error: any) {
-  //     alert(error.message);
-  //   } finally {
-  //     loading = false;
-  //   }
-  // };
 
   const toggleCollapse = () => {
     collapsed = !collapsed
@@ -58,10 +34,9 @@
 		});
   }
 
-  // const toggleActionModal = (modalstate:string) => {
-  //   $actionModalState = modalstate;
-  // }
-
+  const toggleMenu = () => {
+    menu_open = !menu_open
+  }
 
 </script>
 <aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" in:fade={{duration: 250}} out:fade={{duration:400}}>
@@ -69,11 +44,24 @@
     <div class="sidedrawer__content">
       <header class="profile">
         <div class="profile-img">
-          <img src="" alt="">
+          <img src={avatar_url} alt="">
         </div>
         <div class="profile-wrapper">
-          <h3>username</h3>
-          <span>settings</span>
+          <div class="profile-wrapper--top">
+            <h3>{display_name}</h3>
+            <div class="settings">
+              <button on:click={toggleMenu}>
+                <Cog width="20px" height="20px"/>
+              </button>
+              <div class="settings__menu" class:menu_open>
+                <ul>
+                  <li>Settings</li>
+                  <li>Sign Out</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <span>@{username}</span>
         </div>
       </header>
       <ul>
@@ -102,9 +90,6 @@
 </aside>
 
 <style lang="scss">
-  // @import "../../../styles/vars";
-  // @import "../../../styles/breakpoints";
-
   .profile {
     padding-bottom: 32px;
     display: flex;
@@ -155,15 +140,57 @@
     }
   }
 
+  .settings {
+     position: relative;
+
+    button {
+      padding: 8px;
+      transition: all .3s ease;
+      &:hover,
+      &:focus {
+        background-color: lighten(#333, 10);
+      } 
+    }
+  }
+
+  .settings__menu {
+    background-color: #333;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 120px;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+    
+    &.menu_open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    ul {
+      padding-left: 0;
+      list-style: none;
+
+      li {
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .profile-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100%;
     color: #fff;
     opacity: 1;
     transition: all .3s ease;
+    width: 100%;
+
+    &--top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
     h3 {
       color: #fff;
       padding: 4px;
@@ -175,12 +202,7 @@
       padding: 4px;
       line-height: 1;
       font-size: 14px;
-      cursor: pointer;
       transition: all .3s ease;
-      &:hover,
-      &:focus {
-        background-color: lighten(#333, 10);
-      }
     }
   }
 
@@ -189,7 +211,6 @@
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
-    gap: 16px;
     list-style: none;
     margin: 0;
   }
@@ -225,7 +246,7 @@
     span {
       white-space: nowrap;
       opacity: 1;
-      // transition: $transition;
+      transition: all .3s ease;
     }
   }
 
@@ -272,7 +293,7 @@
       left: 0;
       background-color: #111;
       padding: 16px 8px;
-      width: 208px;
+      width: 360px;
       height: 100%;
       transition: all .3s ease;
     }

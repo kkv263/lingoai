@@ -3,6 +3,8 @@ import type { Actions, PageServerLoad } from './$types'
 import { DEEPL_API_KEY } from '$env/static/private';
 import * as deepl from 'deepl-node';
 import { isJapanese } from 'wanakana';
+import fs from 'fs';
+import path from 'path';
 
 import { OpenAI } from "langchain/llms/openai";
 import { OPENAI_API_KEY } from '$env/static/private';
@@ -11,6 +13,19 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanChatMessage, SystemChatMessage } from "langchain/schema";	
 
 export const load = (async ({ locals: { supabase, getSession } }) => {
+  // Delete all audio files if any.
+  const directory = path.join("static", "audio");
+
+  fs.readdir(directory, (err, files) => {
+    if (err) throw err;
+  
+    for (const file of files) {
+      fs.unlink(path.join(directory, file), (err) => {
+        if (err) throw err;
+      });
+    }
+  });
+
   const session = await getSession()
 
   if (!session) {
@@ -23,7 +38,13 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
     .eq('user_id', session.user.id)
     .order('id')
 
-  return { session, messages }
+    const { data: profiles } = await supabase
+    .from('profiles')
+    .select(`username, display_name, avatar_url`)
+    .eq('id', session.user.id)
+    .single()
+
+  return { session, messages, profiles }
 
 }) satisfies PageServerLoad
 
@@ -54,15 +75,6 @@ export const actions = {
 
     const session = await getSession()
     const chatMessage = await generateMessage(translatedMsg.text)
-
-    console.log({
-      user_id: session?.user.id,
-      content: message,
-      ...(!isMsgJapanese && {content_source_lang: message}),
-      ...(isMsgJapanese && {content_target_lang: message}),
-      created_at: new Date(),
-      sender_id: 0
-    })
 
     const { error } = await supabase.from('messages').upsert([{
       user_id: session?.user.id,
