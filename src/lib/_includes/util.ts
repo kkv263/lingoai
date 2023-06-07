@@ -4,3 +4,22 @@ import type { EncodedParams } from '$lib/types/util';
 export const encodeFormBody = (params:EncodedParams): string => {
   return Object.entries(params).flatMap(([key,val]) => val ? `${encodeURIComponent(key)}=${encodeURIComponent(params[key as keyof EncodedParams])}` : []).join('&');
 }
+
+export const clickOutside = (
+  node: HTMLElement,
+  handler: () => void
+): { destroy: () => void } => {
+  const onClick = (event: MouseEvent) =>
+    node &&
+    !node.contains(event.target as HTMLElement) &&
+    !event.defaultPrevented &&
+    handler();
+
+  document.addEventListener('click', onClick, true);
+
+  return {
+    destroy() {
+      document.removeEventListener('click', onClick, true);
+    },
+  };
+}

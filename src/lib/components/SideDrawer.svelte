@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
   import { createEventDispatcher } from 'svelte';
+  import { enhance, type SubmitFunction } from '$app/forms';
   import PlusCircle from "$lib/assets/PlusCircle.svelte";
   import ArrowRight from "$lib/assets/ArrowRight.svelte";
   import Cog from "$lib/assets/Cog.svelte";
+  import { clickOutside } from '$lib/_includes/util';
 
   export let username:string = "";
 	export let display_name:string = "";
 	export let avatar_url:string = "";
+  export let loading:boolean;
 
   const dispatch = createEventDispatcher();
 
@@ -38,8 +40,21 @@
     menu_open = !menu_open
   }
 
+  const handleSignOut: SubmitFunction = () => {
+		loading = true;
+		return async ({ update }) => {
+			loading = false;
+			update();
+		}
+	}
+
+
+  const handleOutsideClickSettings = () => {
+    menu_open = false;
+  }
+
 </script>
-<aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" in:fade={{duration: 250}} out:fade={{duration:400}}>
+<aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true">
   <section class="sidedrawer__inner" class:collapsed>
     <div class="sidedrawer__content">
       <header class="profile">
@@ -49,14 +64,18 @@
         <div class="profile-wrapper">
           <div class="profile-wrapper--top">
             <h3>{display_name}</h3>
-            <div class="settings">
+            <div class="settings" use:clickOutside={handleOutsideClickSettings}>
               <button on:click={toggleMenu}>
                 <Cog width="20px" height="20px"/>
               </button>
               <div class="settings__menu" class:menu_open>
                 <ul>
-                  <li>Settings</li>
-                  <li>Sign Out</li>
+                  <li><button class="button block" disabled={loading}>Settings</button></li>
+                  <li>
+                    <form method="post" action="?/signout" use:enhance={handleSignOut}>
+                      <button type="submit" class="button block" disabled={loading}>Sign Out</button>
+                    </form>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -174,7 +193,13 @@
       list-style: none;
 
       li {
+        padding:0;
         margin-bottom: 0;
+
+        button {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
