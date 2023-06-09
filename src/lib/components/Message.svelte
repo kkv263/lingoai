@@ -18,7 +18,8 @@
 	let audio:any;
 	let canvas:HTMLCanvasElement;
 	let audioElement:HTMLAudioElement;
-	let isAudioPlaying: boolean = false;
+	let isAudioPlaying:boolean = false;
+	let isAudioLoading:boolean = false;
 
   let translateLoading = -1;
 
@@ -37,6 +38,7 @@
 	}
 
 	const japaneseAudio = async(val:string, sender_id:number) => {
+		isAudioLoading = true;
     try {
 			await fetch('/api/v1/tts/jp', {
 				method: 'POST',
@@ -46,6 +48,7 @@
 				})
 			}).then((res) => res.json()).then((data) => {
         audio = data.file;
+				// isAudioLoading = false;
 				audioElement.src = `audio/${audio}`;
 				audioElement.load();
 				audioElement.play();
@@ -154,7 +157,7 @@
 				{content_target_lang}
 			{/if}
     </span>
-		<div class="audio-player" class:isAudioPlaying>
+		<div class={`audio-player ${isAudioLoading ? 'audio-player--active' : ''}`} class:isAudioPlaying>
 			<div class="audio-player__top">
 				<div class="audio-player__buttons">
 					<button type="button" on:click={toggleAudio}>
@@ -164,7 +167,10 @@
 						<PauseCircle width={'24px'} height={'24px'} />
 					</button>
 				</div>
-  			<canvas bind:this={canvas}></canvas>
+				<div class={`audio-player__canvas ${!audio ? 'audio-player__canvas--loading' : ''}`}>
+					<span>Loading Audio...</span>
+  				<canvas bind:this={canvas}></canvas>
+				</div>
 			</div>
 			<!-- <div class="audio-player__time">
 				<span>0:00</span>
@@ -173,21 +179,15 @@
 			</div> -->
 		</div>
   </div>
-
-	<!-- {#if audio} -->
-		<audio autoPlay controls bind:this={audioElement}>
-			<source type='audio/wav' />
-		</audio> 
-	<!-- {/if} -->
+	<audio autoPlay controls bind:this={audioElement}>
+		<source type='audio/wav' />
+	</audio> 
   <span class="message__time">{new Date(created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
 </li>
 
 <style lang="scss">
-	audio {
-		display: none;
-	}
 	.audio-player {
-		display: flex;
+		display: none;
 		flex-direction: column;
 		margin-top: 4px;
 
@@ -200,6 +200,30 @@
 				button:last-child {
 					display: block;
 				}
+			}
+		}
+
+		&--active {
+			display: flex;
+		}
+	}
+
+	audio {
+		display: none;
+	}
+
+	.audio-player__canvas {
+		width: 100%;
+		span {
+			display: none;
+		}
+
+		&--loading {
+			span {
+				display: block;
+			}
+			canvas {
+				display: none;
 			}
 		}
 	}
