@@ -9,7 +9,7 @@
   export let username:string = "";
 	export let display_name:string = "";
 	export let avatar_url:string = "";
-  export let loading:boolean;
+  let loading:boolean;
 
   const dispatch = createEventDispatcher();
 
@@ -87,7 +87,7 @@
         {#each drawerItems as {icon, text} }
           <li data-label={text}>
             <button type="button">
-              <div  class="icon-wrapper">
+              <div class="icon-wrapper">
                 <svelte:component this={icon} width="24px" height="24px"/>
               </div>
               <span>{text}</span>
@@ -321,6 +321,12 @@
       width: 360px;
       height: 100%;
       transition: all .3s ease;
+
+      @media (max-width: 1023px) {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
     }
 
     &__content {

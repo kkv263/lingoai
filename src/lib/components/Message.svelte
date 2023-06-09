@@ -20,6 +20,8 @@
 	let audioElement:HTMLAudioElement;
 	let isAudioPlaying:boolean = false;
 	let isAudioLoading:boolean = false;
+	let isJapaneseContent = isJapanese(content);
+	let isAudioDisabled = (!isJapanese(content) && activeTab == 0) ||  (isJapanese(content) && activeTab == 1);
 
   let translateLoading = -1;
 
@@ -28,6 +30,7 @@
 			update({reset:false});
 			translateLoading = -1;
 			activeTab = activeTab !== 0 ? 0 : 1;
+			isAudioDisabled = (!isJapanese(content) && activeTab == 0) ||  (isJapanese(content) && activeTab == 1);
 		}
 	}
 
@@ -35,10 +38,20 @@
 		if (!content_target_lang || !content_source_lang) {
 			translateLoading = index;
 		}
+		isAudioPlaying = false;
+		audioElement.pause();
+		audioElement.currentTime = 0;
 	}
 
 	const japaneseAudio = async(val:string, sender_id:number) => {
 		isAudioLoading = true;
+
+		if (audio) {
+			audioElement.currentTime = 0;
+			audioElement.play();
+			return
+		}
+
     try {
 			await fetch('/api/v1/tts/jp', {
 				method: 'POST',
@@ -138,7 +151,7 @@
       <input id="transTranslated" name="transTranslated" type="text" hidden value={!content_source_lang || !content_target_lang} />
     </form>
     <form action="">
-      <button on:click={() => japaneseAudio(content_target_lang, sender_id)} title="Listen in Japanese" type="button"><AudioIcon width={'16px'} height={'16px'}/></button>
+      <button disabled={isAudioDisabled} on:click={() => japaneseAudio(content_target_lang, sender_id)} title="Listen in Japanese" type="button"><AudioIcon width={'16px'} height={'16px'}/></button>
     </form>
   </span>
   <div class:message__content--loading="{translateLoading === i}" class="message__content">
@@ -151,13 +164,13 @@
       {#if content}{content}{/if}
     </span>
     <span class:message__item--active="{activeTab === 1}" class="message__translated message__item">
-      {#if isJapanese(content) && content_source_lang}
+      {#if isJapaneseContent && content_source_lang}
 				{content_source_lang}
-			{:else if !isJapanese(content) && content_target_lang}
+			{:else if !isJapaneseContent && content_target_lang}
 				{content_target_lang}
 			{/if}
     </span>
-		<div class={`audio-player ${isAudioLoading ? 'audio-player--active' : ''}`} class:isAudioPlaying>
+		<div class={`audio-player ${isAudioLoading ? 'audio-player--active' : ''}`} class:isAudioPlaying class:isAudioDisabled>
 			<div class="audio-player__top">
 				<div class="audio-player__buttons">
 					<button type="button" on:click={toggleAudio}>
@@ -190,6 +203,10 @@
 		display: none;
 		flex-direction: column;
 		margin-top: 4px;
+
+		&.isAudioDisabled {
+			display: none;
+		}
 
 		&.isAudioPlaying {
 			.audio-player__buttons {
@@ -329,6 +346,24 @@
 			padding: 4px;
 			cursor: pointer;
 			color: #fff;
+
+			&[disabled] {
+				pointer-events: none;
+				opacity: 0.5;
+				position: relative;
+
+				&:after {
+					position: absolute;
+					content: '';
+					width: 90%;
+					height: 1px;
+					top: 50%;
+					left: 0;
+					transform: translateY(-50%) rotate(-45deg);
+					background-color: #fff;
+					display: block;
+				}
+			}
 
 			&:not(:last-child) {
 				margin-right: 8px;

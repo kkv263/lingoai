@@ -5,6 +5,7 @@
 	import { tokenize } from 'wanakana';
   import Message from '$lib/components/Message.svelte';
 	import SideDrawer from '$lib/components/SideDrawer.svelte';
+	import Menu from '$lib/assets/Menu.svelte';
 
 	export let data;
 	// export let form;
@@ -53,6 +54,7 @@
 	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
+				<button type="button" class="chat__menu"><Menu width={'24px'} height={'24px'}/></button>
 				<div>Chatting with: {speakerName}</div>
 			</div>
 			<ul class="messages__list" >
@@ -88,6 +90,13 @@
 			margin-left: 360px;
 			width: calc(100% - 360px);
 		}
+
+		@media (max-width: 1023px) {
+			&[data-collapsed=false] {
+				width: 100%;
+				margin-left: 0;
+			}
+		}
 	}
 	
 	.chat__top {
@@ -100,8 +109,21 @@
 		top: 0;
 		left: 0;
 		z-index: 1;
+		justify-content: space-between;
 		div {
 			color: #fff;
+		}
+	}
+
+	.chat__menu {
+		background-color: transparent;
+		border: 0;
+		color: #fff;
+		cursor: pointer;
+		display: none;
+
+		@media (max-width: 1023px) {
+			display: block;
 		}
 	}
 	
