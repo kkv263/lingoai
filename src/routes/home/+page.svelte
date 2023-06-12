@@ -8,7 +8,6 @@
 	import Menu from '$lib/assets/Menu.svelte';
 
 	export let data;
-	// export let form;
 
   let audio:any;
 	let loading = false;
@@ -16,6 +15,7 @@
 	let chatContainer: HTMLDivElement;
 	let messagesInput: HTMLInputElement;
 	let speakerName: string = ' うちは サスケ';
+	let child:any;
 
 	onMount(() => {
 		scrollToBottom();
@@ -43,6 +43,10 @@
 	const handleCollapse = (event:any) => {
 		chatContainer.setAttribute('data-collapsed', event.detail.collapsed);
 	}
+
+	const toggleMenu = () => {
+		child.tester();
+	}
 </script>
 
 <div class="">
@@ -50,11 +54,11 @@
   <div>You are signed in</div>  -->
 <!-- 
 	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div> -->
-	<SideDrawer on:collapse={handleCollapse} {...data.profiles}/>
+	<SideDrawer on:collapse={handleCollapse} {...data.profiles} bind:this={child}/>
 	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
-				<button type="button" class="chat__menu"><Menu width={'24px'} height={'24px'}/></button>
+				<button on:click={toggleMenu} type="button" class="chat__menu"><Menu width={'24px'} height={'24px'}/></button>
 				<div>Chatting with: {speakerName}</div>
 			</div>
 			<ul class="messages__list" >

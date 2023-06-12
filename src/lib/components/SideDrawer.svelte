@@ -20,6 +20,7 @@
   // let loading:boolean;
   let collapsed:boolean = false;
   let menu_open:boolean = false;
+  let mobile_menu_open:boolean = false;
 
   const drawerItems = [
     {
@@ -53,8 +54,14 @@
     menu_open = false;
   }
 
+  export const tester = () => {
+    console.log('tesr');
+    mobile_menu_open = !mobile_menu_open;
+
+  }
+
 </script>
-<aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true">
+<aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" class:mobile_menu_open>
   <section class="sidedrawer__inner" class:collapsed>
     <div class="sidedrawer__content">
       <header class="profile">
@@ -311,6 +318,16 @@
     z-index: 2;
     top: 0;
     left: 0;
+
+    &.mobile_menu_open {
+      .sidedrawer__inner {
+        width: 360px;
+        padding: 16px 8px;
+      }
+      background: rgba(#fff, 0.2);
+      backdrop-filter: blur(2px);
+      width: 100%;
+    }
 
     &__inner {
       position: absolute;
