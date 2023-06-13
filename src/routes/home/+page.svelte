@@ -45,7 +45,7 @@
 	}
 
 	const toggleMenu = () => {
-		child.tester();
+		child.toggleMobileMenu();
 	}
 </script>
 

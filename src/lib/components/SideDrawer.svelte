@@ -4,6 +4,7 @@
   import PlusCircle from "$lib/assets/PlusCircle.svelte";
   import ArrowRight from "$lib/assets/ArrowRight.svelte";
   import Cog from "$lib/assets/Cog.svelte";
+  import Close from "$lib/assets/Close.svelte";
   import { clickOutside } from '$lib/_includes/util';
 
   export let username:string = "";
@@ -13,7 +14,6 @@
 
   const dispatch = createEventDispatcher();
 
-  // TODO: Add signout button
   // TODO: Add settings functionality
   // TODO: close settings menu on outside click.
 
@@ -54,14 +54,13 @@
     menu_open = false;
   }
 
-  export const tester = () => {
-    console.log('tesr');
+  export const toggleMobileMenu = () => {
     mobile_menu_open = !mobile_menu_open;
-
   }
 
 </script>
 <aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" class:mobile_menu_open>
+  <button type="button" class="sidedrawer__overlay" on:click={toggleMobileMenu}></button>
   <section class="sidedrawer__inner" class:collapsed>
     <div class="sidedrawer__content">
       <header class="profile">
@@ -72,9 +71,14 @@
           <div class="profile-wrapper--top">
             <h3>{display_name}</h3>
             <div class="settings" use:clickOutside={handleOutsideClickSettings}>
-              <button on:click={toggleMenu}>
-                <Cog width="20px" height="20px"/>
-              </button>
+              <div class="settings__buttons">
+                <button on:click={toggleMenu}>
+                  <Cog width="20px" height="20px"/>
+                </button>
+                <button class="settings__close" on:click={toggleMobileMenu}>
+                  <Close width="20px" height="20px"/>
+                </button>
+              </div>
               <div class="settings__menu" class:menu_open>
                 <ul>
                   <li><button class="button block" disabled={loading}>Settings</button></li>
@@ -91,7 +95,8 @@
         </div>
       </header>
       <ul>
-        {#each drawerItems as {icon, text} }
+        <!-- TODO: Add back items later -->
+        <!-- {#each drawerItems as {icon, text} }
           <li data-label={text}>
             <button type="button">
               <div class="icon-wrapper">
@@ -100,22 +105,76 @@
               <span>{text}</span>
             </button>
           </li>
-        {/each}
+        {/each} -->
 
-        <li data-label="Expand" class="resize">
+        <!-- TODO: Remove functionality for mobile, add back later -->
+        <!-- <li data-label="Expand" class="resize">
           <button type="button" on:click={toggleCollapse}>
             <div class="icon-wrapper">
               <ArrowRight width="24px" height="24px"/>
             </div>
             <span>Collapse</span>
           </button>
-        </li>
+        </li> -->
       </ul>
     </div>
   </section>
 </aside>
 
 <style lang="scss">
+  .sidedrawer {
+    position: fixed;
+    height: 100%;
+    z-index: 2;
+    top: 0;
+    left: 0;
+
+    &.mobile_menu_open {
+      width: 100%;
+      .sidedrawer__inner {
+        width: 360px;
+        padding: 16px 8px;
+      }
+    }
+
+    &__inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      padding: 16px 8px;
+      width: 360px;
+      height: 100%;
+      transition: all .3s ease;
+
+      @media (max-width: 1023px) {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    }
+
+    &__content {
+      height: calc( 100% - 32px);
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .sidedrawer__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(2px);
+    cursor: auto;
+
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  }
+
   .profile {
     padding-bottom: 32px;
     display: flex;
@@ -176,6 +235,16 @@
       &:focus {
         background-color: lighten(#333, 10);
       } 
+    }
+  }
+
+  .settings__buttons {
+    display: flex;
+  }
+
+  .settings__close {
+    @media (min-width: 1024px) {
+      display: none;
     }
   }
 
@@ -247,40 +316,46 @@
     margin: 0;
   }
 
-  li {
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: all .3s ease;
-    position: relative;
+  // li {
+  //   padding: 8px 12px;
+  //   cursor: pointer;
+  //   transition: all .3s ease;
+  //   position: relative;
 
-    &:after {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: calc(100% + 4px);
-      content: attr(data-label);
-      color: #fff;
-      white-space: nowrap;
-      background-color: #000;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 12px;
-      transition: all .3s ease;
-      opacity: 0;
-      visibility: hidden;
-    }
+  //   &:after {
+  //     position: absolute;
+  //     top: 50%;
+  //     transform: translateY(-50%);
+  //     left: calc(100% + 4px);
+  //     content: attr(data-label);
+  //     color: #fff;
+  //     white-space: nowrap;
+  //     background-color: #000;
+  //     padding: 4px 8px;
+  //     border-radius: 8px;
+  //     font-size: 12px;
+  //     transition: all .3s ease;
+  //     opacity: 0;
+  //     visibility: hidden;
+  //   }
 
-    &:hover,
-    &:focus {
-      background-color: lighten(#333, 10);
-    }
+  //   &:hover,
+  //   &:focus {
+  //     background-color: lighten(#333, 10);
+  //   }
 
-    span {
-      white-space: nowrap;
-      opacity: 1;
-      transition: all .3s ease;
-    }
-  }
+  //   span {
+  //     white-space: nowrap;
+  //     opacity: 1;
+  //     transition: all .3s ease;
+  //   }
+    
+  //   &[data-label="Expand"] {
+  //     @media (max-width: 1023px) {
+  //       display: none;
+  //     }
+  //   }
+  // }
 
   .icon-wrapper {
     display: flex;
@@ -309,47 +384,6 @@
     cursor: pointer;
     span {
       line-height: 1;
-    }
-  }
-
-  .sidedrawer {
-    position: fixed;
-    height: 100%;
-    z-index: 2;
-    top: 0;
-    left: 0;
-
-    &.mobile_menu_open {
-      .sidedrawer__inner {
-        width: 360px;
-        padding: 16px 8px;
-      }
-      background: rgba(#fff, 0.2);
-      backdrop-filter: blur(2px);
-      width: 100%;
-    }
-
-    &__inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: #111;
-      padding: 16px 8px;
-      width: 360px;
-      height: 100%;
-      transition: all .3s ease;
-
-      @media (max-width: 1023px) {
-        width: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-    }
-
-    &__content {
-      height: calc( 100% - 32px);
-      display: flex;
-      flex-direction: column;
     }
   }
 
