@@ -11,6 +11,7 @@
 	export let display_name:string = "";
 	export let avatar_url:string = "";
   let loading:boolean;
+  let settingsModal:HTMLDialogElement;
 
   const dispatch = createEventDispatcher();
 
@@ -54,12 +55,32 @@
     menu_open = false;
   }
 
+  const toggleSettingsModal = () => {
+    if (settingsModal.hasAttribute('open')) {
+      settingsModal.close();
+    }
+    else {
+      settingsModal.show();
+    }
+  }
+
   export const toggleMobileMenu = () => {
     mobile_menu_open = !mobile_menu_open;
   }
 
 </script>
-<aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" class:mobile_menu_open>
+<dialog class="settings__modal" bind:this={settingsModal}>
+  <div class="settings__modal-inner" >
+    <header>
+      <div>Settings</div>
+      <button on:click={toggleSettingsModal}>
+        <Close width="20px" height="20px"/>
+      </button>
+    </header>
+  </div>
+  <div class="settings__modal-backdrop"></div>
+</dialog>
+<aside class="sidedrawer" tabindex="-1" aria-labelledby="sidedrawer-label" class:mobile_menu_open>
   <button type="button" class="sidedrawer__overlay" on:click={toggleMobileMenu}></button>
   <section class="sidedrawer__inner" class:collapsed>
     <div class="sidedrawer__content">
@@ -81,7 +102,7 @@
               </div>
               <div class="settings__menu" class:menu_open>
                 <ul>
-                  <li><button class="button block" disabled={loading}>Settings</button></li>
+                  <li><button class="button block" on:click={toggleSettingsModal} disabled={loading}>Settings</button></li>
                   <li>
                     <form method="post" action="?/signout" use:enhance={handleSignOut}>
                       <button type="submit" class="button block" disabled={loading}>Sign Out</button>
@@ -122,6 +143,41 @@
 </aside>
 
 <style lang="scss">
+  .settings__modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    border: 0;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  .settings__modal-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    color: #fff;
+    padding: 16px;
+    min-width: 320px;
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .settings__modal-backdrop {
+    background-color: rgba(#000, 0.5);
+    width: 100%;
+    height: 100%;
+  }
+
   .sidedrawer {
     position: fixed;
     height: 100%;
