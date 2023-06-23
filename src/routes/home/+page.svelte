@@ -14,7 +14,7 @@
 	let messagesContainer: HTMLDivElement;
 	let chatContainer: HTMLDivElement;
 	let messagesInput: HTMLInputElement;
-	let speakerName: string = ' うちは サスケ';
+	let speakerName: string = 'リンゴ';
 	let child:any;
 
 	onMount(() => {

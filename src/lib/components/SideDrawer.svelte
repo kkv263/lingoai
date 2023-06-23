@@ -61,6 +61,7 @@
     }
     else {
       settingsModal.show();
+      menu_open = false;
     }
   }
 
@@ -78,7 +79,7 @@
       </button>
     </header>
   </div>
-  <div class="settings__modal-backdrop"></div>
+  <button class="settings__modal-backdrop" on:click={toggleSettingsModal}></button>
 </dialog>
 <aside class="sidedrawer" tabindex="-1" aria-labelledby="sidedrawer-label" class:mobile_menu_open>
   <button type="button" class="sidedrawer__overlay" on:click={toggleMobileMenu}></button>
@@ -86,7 +87,7 @@
     <div class="sidedrawer__content">
       <header class="profile">
         <div class="profile-img">
-          <img src={avatar_url} alt="">
+          <img src={avatar_url ?? 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'} alt="">
         </div>
         <div class="profile-wrapper">
           <div class="profile-wrapper--top">
@@ -241,8 +242,6 @@
   .profile-img {
     max-width: 48px;
     height: 48px;
-    border-radius: 8px;
-    background-color: plum;
     flex: 1 0 64px;
     position: relative;
     cursor: pointer;
@@ -256,7 +255,6 @@
     }
 
     &:after {
-      border-radius: 8px;
       transition: all .3s ease;
       opacity: 0;
       visibility: hidden;

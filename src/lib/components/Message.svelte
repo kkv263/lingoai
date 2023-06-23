@@ -105,7 +105,7 @@
 
 					analyser.getByteFrequencyData(dataArray);
 
-					ctx.fillStyle = sender_id === 0 ? "#347FC4" : "#B785F5";
+					ctx.fillStyle = sender_id === 0 ? "#347FC4" : "#FFA16A";
 					ctx.fillRect(0, 0, width, height);
 
 					for (var i = 0; i < bufferLength; i++) {
@@ -303,12 +303,12 @@
 			align-self: flex-start;
 
 			.message__content {
-				background-color: #B785F5;
+				background-color: #FFA16A;
 				border-top-left-radius: 0;
 			}
 
 			.message__options {
-				background-color: #B785F5;
+				background-color: #FFA16A;
 				left: 0;
 			}
 		}
