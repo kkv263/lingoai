@@ -1,6 +1,6 @@
 <script lang="ts"></script>
 
-<div class="hero">
+<section class="hero">
   <div class="orange-circle"></div>
   <div class="white-circle"></div>
   <div class="container">
@@ -28,7 +28,7 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <style lang="scss">
   $cube-width: 300px;

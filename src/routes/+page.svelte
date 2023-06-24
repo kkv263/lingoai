@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import Hero from '$lib/components/landing/Hero.svelte';
+  import Learning from '$lib/components/landing/Learning.svelte';
 
   // const createAudio = async() => {
   //   try {
@@ -45,6 +46,7 @@
 </script>
 
 <Hero />
+<Learning />
 <button on:click={signUp} >Sign Up </button>
 <button on:click={signInWithEmail} >Sign in </button>
 
