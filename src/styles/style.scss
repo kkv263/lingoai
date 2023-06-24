@@ -1,11 +1,21 @@
 @import 'vars';
 
 body {
-  font-family: 'Roboto Mono', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: 16px;
   position: relative;
 }
 
 h1 {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Oswald', sans-serif;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 4px 64px;
+
+  @media (max-width: 1023px) {
+    padding: 4px 16px;
+  }
 }

@@ -1,15 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-
-	let inputValue:string = ''; // or hsv or hex
-  let translatedValue:string = '';
-  let audio:any;
-	let email: string;
-  let password: string;
-  let userName: string;
-  let birthdate: string;
-  let displayName: string;
-
+  import Hero from '$lib/components/landing/Hero.svelte';
 
   // const createAudio = async() => {
   //   try {
@@ -53,11 +44,7 @@
 	export let data;
 </script>
 
-<h1>index page</h1>
-<p>you are signed out</p>
-
-<div>{translatedValue}</div>
-
+<Hero />
 <button on:click={signUp} >Sign Up </button>
 <button on:click={signInWithEmail} >Sign in </button>
 

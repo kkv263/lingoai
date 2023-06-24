@@ -21,9 +21,9 @@
 	<title>AI Chat</title>
 </svelte:head>
 
-<div class="container">
+<main class="main">
 	<slot />
-</div>
+</main>
 
 <style lang="scss" global>
 	@import '../styles/normalize.css';
