@@ -24,7 +24,7 @@
           to LingoAI
         </h1>
         <div class="hero__subheadline">Immerse yourself in different <br> languages using AI</div>
-        <button class="hero__button" type="button">Waitlist Now</button>
+        <button class="hero__button" type="button">Join the Waitlist</button>
       </div>
     </div>
   </div>
@@ -152,6 +152,10 @@
     @media (max-width: 1279px) {
       font-size: 64px;
     }
+
+    @media (max-width: 767px) {
+      font-size: 54px;
+    }
   }
   
   .hero__headline--top {
@@ -175,8 +179,15 @@
     margin-left: 32px;
     animation: rotateCube 12s infinite;
 
-    @media (max-width: 1023px) {
+    @media (max-width: 1279px) {
       margin-left: 16px;
+      width: $cube-width - 32px;
+      height: 88px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 767px) {
+      width: $cube-width - 64px;
     }
   }
 
@@ -231,6 +242,11 @@
       font-size: 64px;
       width: $cube-width - 64px;
     }
+
+    @media (max-width: 767px) {
+      width: $cube-width - 96px;
+      font-size: 54px;
+    }
   }
 
   .hero__cube-face--front  { transform: translateZ($translateZ) translateX(-50%); z-index: 1; }
@@ -243,7 +259,7 @@
       font-size: 54px;
 
       @media (max-width: 1279px) {
-        font-size: 40px;
+        font-size:36px;
       }
     }
   }
