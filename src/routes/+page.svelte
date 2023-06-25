@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+  import Email from '$lib/components/landing/Email.svelte';
   import Hero from '$lib/components/landing/Hero.svelte';
   import Learning from '$lib/components/landing/Learning.svelte';
 
@@ -45,10 +46,44 @@
 	export let data;
 </script>
 
+<nav>
+	<div class="container">
+		<a href="/">
+			<div class="nav__text">
+				<span>LINGO</span>
+				<span>AI</span>
+			</div>
+		</a>
+	</div>
+
+</nav>
 <Hero />
 <Learning />
-<button on:click={signUp} >Sign Up </button>
-<button on:click={signInWithEmail} >Sign in </button>
+<Email />
+<!-- <button on:click={signUp} >Sign Up </button>
+<button on:click={signInWithEmail} >Sign in </button> -->
 
 <style lang="scss">
+	nav {
+		background-color: #FC9437;
+		padding: 8px 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.nav__text {
+		color: #fff;
+		font-weight: bold;
+		font-family: 'Oswald';
+		font-size: 20px;
+		display: flex;
+		align-items: flex-end;
+		line-height: 1;
+
+		span:last-child {
+			font-size: 14px;
+		}
+	}
 </style>

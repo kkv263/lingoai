@@ -31,16 +31,17 @@
 </section>
 
 <style lang="scss">
+  @import '../../../styles/vars';
   $cube-width: 300px;
   $translateZ: calc($cube-width / 6);
 
   .hero {
-    background-image: linear-gradient(to right, #fff 0%, #fff 40%, #FF710B 40%, #FF710B 100%);
+    background-image: linear-gradient(to right, #fff 0%, #fff 40%, $primary-color 40%, $primary-color 100%);
     position: relative;
 
     @media (max-width: 1023px) {
       background-image: none;
-      background-color: #FF710B;
+      background-color: $primary-color;
       padding: 32px 0;
     }
 
@@ -51,7 +52,7 @@
       border-radius: 100%;
       width: 120px;
       height: 120px;
-      background-color: #FF710B;  
+      background-color: $primary-color;  
       z-index: 1;
 
       @media (max-width: 1023px) {
@@ -63,7 +64,7 @@
         position: absolute;
         left: 0px;
         top: 120px;
-        background-color: #FF710B;  
+        background-color: $primary-color;  
         width: 32px;
         height: 32px;
         border-radius: 100%;
@@ -233,7 +234,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #FF710B;  
+    background-color: $primary-color;  
     line-height: 1;
     left: 50%;
     bottom: 0;
@@ -284,7 +285,7 @@
     margin-top: auto;
     font-size: 24px;
     font-weight: bold;
-    color: #FF710B;
+    color: $primary-color;
     padding: 4px 24px;
     cursor: pointer;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);

@@ -61,6 +61,8 @@
 </section>
 
 <style lang="scss">
+  @import '../../../styles/vars';
+
   .learning {
     background-color: #F4F3F9;
     padding: 64px 0;
@@ -146,7 +148,7 @@
     &.tab-active,
     &:hover,
     &:focus {
-      background-color: #FF710B;
+      background-color: $primary-color;
       opacity: 1;
       color: #fff;
       border-radius: 8px;
