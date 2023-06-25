@@ -6,7 +6,9 @@
   <div class="container">
     <div class="hero__content">
       <div class="hero__content--left">
-        <img class="hero__img" src="src/lib/assets/img/hero_model.png" alt="">
+        <div class="hero__img-container">
+          <img class="hero__img" src="src/lib/assets/img/hero_model.png" alt="">
+        </div>
       </div>
       <div class="hero__content--right">
         <h1 class="hero__headline"> 
@@ -111,6 +113,12 @@
 
   .hero__content--left {
     position: relative;
+  }
+
+  .hero__img-container {
+    background-color: #fff;
+    border-radius: 100%;
+    
   }
 
   .hero__img {
