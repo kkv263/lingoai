@@ -2,8 +2,8 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit'
 import type { Handle } from '@sveltejs/kit'
 
-const SUPABASE_URL = process.env.NODE_ENV === 'production' ? process.env.PUBLIC_SUPABASE_URL as string : PUBLIC_SUPABASE_URL
-const SUPABASE_ANON_KEY = process.env.NODE_ENV === 'production' ? process.env.PUBLIC_SUPABASE_ANON_KEY as string : PUBLIC_SUPABASE_ANON_KEY
+const SUPABASE_URL = PUBLIC_SUPABASE_URL
+const SUPABASE_ANON_KEY = PUBLIC_SUPABASE_ANON_KEY
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createSupabaseServerClient({
