@@ -8,7 +8,7 @@ import path from 'path';
 const textToSpeech = async (body:any) => {
   // Set the API key for ElevenLabs API. 
   // Do not use directly. Use environment variables.
-  const API_KEY = ELEVEN_API_KEY;
+  const API_KEY = process.env.NODE_ENV === 'production' ? process.env.ELEVEN_API_KEY : ELEVEN_API_KEY;
   // Set the ID of the voice to be used.
   const VOICE_ID = 'AZnzlk1XvdvUeBnXmlld';
 
