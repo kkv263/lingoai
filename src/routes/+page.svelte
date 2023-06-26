@@ -25,7 +25,7 @@
 	// 	}
   // }
 
-	$: ({ supabase } = data);
+	// $: ({ supabase } = data);
 
 	// const signInWithEmail = async () => {
 	// 	const { data, error } = await supabase.auth.signInWithPassword({
@@ -43,7 +43,7 @@
 	// 	})
   // }
 
-	export let data;
+	// export let data;
 </script>
 
 <nav>
