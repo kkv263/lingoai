@@ -4,7 +4,7 @@
   import LanguageIcon from "$lib/assets/LanguageIcon.svelte";
   import translateImg from "$lib/assets/img/translate.png";
   import translateVideo from "$lib/assets/img/phonetranslate.mp4";
-  import audioImg from "$lib/assets/img/audio.png";
+  import audioImg from "$lib/assets/img/speaker.png";
   import audioVideo from "$lib/assets/img/phoneaudio.mp4";
   import globeImg from "$lib/assets/img/group.png";
   import globePhoneImg from "$lib/assets/img/phone.png";
