@@ -26,7 +26,7 @@
           to LingoAI
         </h1>
         <div class="hero__subheadline">Immerse yourself in different <br> languages using AI</div>
-        <button class="hero__button" type="button">Join the Waitlist</button>
+        <a href="#waitlist" class="hero__button">Join the Waitlist</a>
       </div>
     </div>
   </div>
@@ -118,7 +118,11 @@
   .hero__img-container {
     background-color: #fff;
     border-radius: 100%;
-    
+    @media (max-width: 1023px) {
+      max-height: 480px;
+      margin: 0 auto;
+      max-width: 480px;
+    }
   }
 
   .hero__img {
@@ -298,6 +302,7 @@
     cursor: pointer;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: all .3s ease;
+    text-decoration: none;
 
     &:hover {
       background-color: darken(#fff, 10%);

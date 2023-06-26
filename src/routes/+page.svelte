@@ -27,21 +27,21 @@
 
 	$: ({ supabase } = data);
 
-	const signInWithEmail = async () => {
-		const { data, error } = await supabase.auth.signInWithPassword({
-			email: 'sprantmaster@gmail.com',
-			password: 'password',
-		});
+	// const signInWithEmail = async () => {
+	// 	const { data, error } = await supabase.auth.signInWithPassword({
+	// 		email: 'sprantmaster@gmail.com',
+	// 		password: 'password',
+	// 	});
 
-		goto('/logging-in');
-	}
+	// 	goto('/logging-in');
+	// }
 
-	const signUp = async () => {
-		const { error } = await supabase.auth.signUp({
-			email: 'sprantmaster@gmail.com',
-			password: 'password',
-		})
-  }
+	// const signUp = async () => {
+	// 	const { error } = await supabase.auth.signUp({
+	// 		email: 'sprantmaster@gmail.com',
+	// 		password: 'password',
+	// 	})
+  // }
 
 	export let data;
 </script>
@@ -60,8 +60,8 @@
 <Hero />
 <Learning />
 <Email />
-<!-- <button on:click={signUp} >Sign Up </button>
-<button on:click={signInWithEmail} >Sign in </button> -->
+<!-- <button on:click={signUp} >Sign Up </button> -->
+<!-- <button on:click={signInWithEmail} >Sign in </button> -->
 
 <style lang="scss">
 	nav {

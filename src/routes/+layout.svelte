@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>AI Chat</title>
+	<title>LingoAI</title>
 </svelte:head>
 
 <main class="main">

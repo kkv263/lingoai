@@ -9,16 +9,25 @@
       icon: LanguageIcon,
       header: 'Translation',
       content: `Translate messages on the fly with DeepL translation, which are high quality, accurate, and most natural-sounding translations.`,
+      img: 'src/lib/assets/img/translate.png',
+      phoneVideo: 'src/lib/assets/img/phonetranslate.mp4',
+      phoneImg: ''
     },
     {
       icon: AudioIcon,
       header: 'Audio',
       content: 'Messages are audio transcribed with unlimited playback. Listen to a natural language to immerse yourself and learn the language!',
+      img: 'src/lib/assets/img/speaker.png',
+      phoneVideo: 'src/lib/assets/img/phoneaudio.mp4',
+      phoneImg: ''
     },
     {
       icon: GlobeIcon,
       header: 'AI Personalities',
-      content: 'Choose from a different number of AI personalities to chat with! Over 10+ personalities that to choose from that fit your needs -- ranging from casual to serious',
+      content: 'Choose from a different number of AI personalities to chat with! Ranging from casual to serious personalities to fit your needs.',
+      img: 'src/lib/assets/img/group.png',
+      phoneVideo: '',
+      phoneImg: 'src/lib/assets/img/phone.png'
     },
   ];
 
@@ -45,16 +54,27 @@
             {/each}
           </ul>
           <ul class="learning__tabs-contents">
-            {#each tabPanels as {content}, i}
+            {#each tabPanels as {content, img}, i}
               <li class={`learning__tabs-tabpanel ${activeTab === i ? "tabpanel-active" : ""}`}>
-                <div role="tabpanel" id={'tabpanel-' + i} aria-labelledby={"tab-" + i}>{content}</div>
+                <div role="tabpanel" id={'tabpanel-' + i} aria-labelledby={"tab-" + i}>
+                  {content}
+                  <img class="tabpanel__img" src={img} alt="">
+                </div>
               </li>
             {/each}
           </ul>
         </div>
       </div>
       <div class="learning__container--right">
-        <img class="learning__img" src="src/lib/assets/img/phone.png" alt="">
+        {#each tabPanels as {phoneVideo, phoneImg}, i}
+          <div class={`learning__tabs-phone ${activeTab === i ? "tabpanel-active" : ""}`}>
+            {#if phoneVideo}
+            <video src={phoneVideo} autoPlay muted loop playsInline></video>
+            {:else if phoneImg}
+              <img class="learning__img" src={phoneImg} alt="phone">
+            {/if}
+          </div>
+        {/each}
       </div>
     </div>
   </div>
@@ -115,6 +135,7 @@
     display: flex;
     padding-bottom: 32px;
     justify-content: space-around;
+    padding-left: 0;
 
     @media (max-width: 767px) {
       flex-direction: column;
@@ -161,15 +182,31 @@
 
   .learning__tabs-contents {
     list-style: none;
+    padding-left: 0;
   }
 
   .learning__tabs-tabpanel {
     display: none;
     white-space: pre-wrap;
-    font-size: 20px;
+    font-size: 18px;
+    
+    @media (max-width: 767px) {
+      font-size: 16px;
+    }
 
     &.tabpanel-active {
       display: block;
+    }
+  }
+
+  .learning__tabs-phone {
+    display: none;
+    &.tabpanel-active {
+      display: block;
+
+      @media (max-width: 1023px) {
+        display: none;
+      }
     }
   }
 
@@ -183,8 +220,12 @@
     }
   }
 
+  .tabpanel__img {
+    max-height: 240px;
+    margin: 16px auto 0;
+  }
+
   .learning__img {
-    max-width: 540px;
     width: 100%;
     height: auto;
   }

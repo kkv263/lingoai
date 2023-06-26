@@ -3,11 +3,11 @@
 
 </script>
 
-<section class="email">
+<section class="email" id="waitlist">
   <div class="container">
     <h2>Ready to lingo? Join the waitlist!</h2>
     <div class="email__input-container">
-      <input placeholder="email@example.com" type="text" class="email__input">
+      <input placeholder="For demo purposes, clicking join will not do anything currently" type="text" class="email__input">
       <button class="email__button" type="button">
         <span>Join</span>
         <SendIcon width={"24px"} height={"24px"}/>
