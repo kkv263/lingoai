@@ -68,8 +68,8 @@ export const actions = {
     const message = formData.get('msg') as string
     const isMsgJapanese = isJapanese(message);
 
-    const authKey = process.env.NODE_ENV === 'production' ? process.env.DEEPL_API_KEY : DEEPL_API_KEY;
-    const translator = new deepl.Translator(authKey as string);
+    const authKey = process.env.NODE_ENV === 'production' ? process.env.DEEPL_API_KEY as string : DEEPL_API_KEY;
+    const translator = new deepl.Translator(authKey);
 
     const translatedMsg = !isMsgJapanese ? await translator.translateText(message, 'en', 'ja') : {text: message};
 
