@@ -2,6 +2,12 @@
   import AudioIcon from "$lib/assets/AudioIcon.svelte";
   import GlobeIcon from "$lib/assets/GlobeIcon.svelte";
   import LanguageIcon from "$lib/assets/LanguageIcon.svelte";
+  import translateImg from "$lib/assets/img/translate.png";
+  import translateVideo from "$lib/assets/img/phonetranslate.mp4";
+  import audioImg from "$lib/assets/img/audio.png";
+  import audioVideo from "$lib/assets/img/phoneaudio.mp4";
+  import globeImg from "$lib/assets/img/group.png";
+  import globePhoneImg from "$lib/assets/img/phone.png";
 
   let activeTab = 0;
   let tabPanels = [
@@ -9,25 +15,25 @@
       icon: LanguageIcon,
       header: 'Translation',
       content: `Translate messages on the fly with DeepL translation, which are high quality, accurate, and most natural-sounding translations.`,
-      img: 'src/lib/assets/img/translate.png',
-      phoneVideo: 'src/lib/assets/img/phonetranslate.mp4',
+      img: translateImg,
+      phoneVideo: translateVideo,
       phoneImg: ''
     },
     {
       icon: AudioIcon,
       header: 'Audio',
       content: 'Messages are audio transcribed with unlimited playback. Listen to a natural language to immerse yourself and learn the language!',
-      img: 'src/lib/assets/img/speaker.png',
-      phoneVideo: 'src/lib/assets/img/phoneaudio.mp4',
+      img: audioImg,
+      phoneVideo: audioVideo,
       phoneImg: ''
     },
     {
       icon: GlobeIcon,
       header: 'AI Personalities',
       content: 'Choose from a different number of AI personalities to chat with! Ranging from casual to serious personalities to fit your needs.',
-      img: 'src/lib/assets/img/group.png',
+      img: globeImg,
       phoneVideo: '',
-      phoneImg: 'src/lib/assets/img/phone.png'
+      phoneImg: globePhoneImg
     },
   ];
 

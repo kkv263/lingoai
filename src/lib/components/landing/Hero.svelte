@@ -1,4 +1,6 @@
-<script lang="ts"></script>
+<script lang="ts">
+  import heroImg from '$lib/assets/img/hero_model.png'
+</script>
 
 <section class="hero">
   <div class="orange-circle"></div>
@@ -7,7 +9,7 @@
     <div class="hero__content">
       <div class="hero__content--left">
         <div class="hero__img-container">
-          <img class="hero__img" src="src/lib/assets/img/hero_model.png" alt="">
+          <img class="hero__img" src={heroImg} alt="">
         </div>
       </div>
       <div class="hero__content--right">
