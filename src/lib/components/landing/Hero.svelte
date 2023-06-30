@@ -115,6 +115,12 @@
 
   .hero__content--left {
     position: relative;
+    flex: 1 0 50%;
+    max-width: 50%;
+    @media (max-width: 1023px) {
+      flex: 1 0 auto;
+      max-width: none;
+    }
   }
 
   .hero__img-container {
