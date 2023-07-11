@@ -6,13 +6,13 @@
 <section class="email" id="waitlist">
   <div class="container">
     <h2>Ready to lingo? Join the waitlist!</h2>
-    <div class="email__input-container">
-      <input placeholder="email@example.com" type="text" class="email__input">
-      <button class="email__button" type="button">
-        <span>Join</span>
-        <SendIcon width={"24px"} height={"24px"}/>
-      </button>
-    </div>
+    <form class="email__input-container" action="/">
+        <input placeholder="email@example.com" type="text" class="email__input">
+        <button type="submit" class="email__button">
+          <span>Join</span>
+          <SendIcon width={"24px"} height={"24px"}/>
+        </button>
+    </form>
   </div>
 </section>
 <footer class="footer">

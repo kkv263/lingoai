@@ -3,6 +3,7 @@
   import Email from '$lib/components/landing/Email.svelte';
   import Hero from '$lib/components/landing/Hero.svelte';
   import Learning from '$lib/components/landing/Learning.svelte';
+	import LingoIcon from '$lib/assets/LingoIcon.svelte';
 
   // const createAudio = async() => {
   //   try {
@@ -49,6 +50,7 @@
 <nav>
 	<div class="container">
 		<a href="/">
+			<LingoIcon width={'24px'} height={'24px'}/>
 			<div class="nav__text">
 				<span>LINGO</span>
 				<span>AI</span>
@@ -71,6 +73,9 @@
 
 	a {
 		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.nav__text {
@@ -81,6 +86,7 @@
 		display: flex;
 		align-items: flex-end;
 		line-height: 1;
+		margin-left: 8px;
 
 		span:last-child {
 			font-size: 14px;
