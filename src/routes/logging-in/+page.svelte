@@ -100,16 +100,16 @@
 		width: 20px;
 		height: 4px;
 		border-radius: 50%;
-		background-color: rgba(0,0,0,1);
+		background-color: rgba(#fff,1);
 		position: absolute;
 		top: 62px;
 		transform-origin: 50%;
 		z-index: -1;
 		left: 15%;
-		animation: shadow046 .5s alternate infinite ease;
+		animation: shadow .5s alternate infinite ease;
 	}
 
-	@keyframes shadow046 {
+	@keyframes shadow {
 		0% {
 			transform: scaleX(1.5);
 		}

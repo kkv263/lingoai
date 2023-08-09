@@ -54,7 +54,8 @@
   <div>You are signed in</div>  -->
 <!-- 
 	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div> -->
-	<SideDrawer on:collapse={handleCollapse} {...data.profiles} bind:this={child}/>
+
+	<SideDrawer on:collapse={handleCollapse} {...data.profiles} chatbots={data.chatbots} bind:this={child}/>
 	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">

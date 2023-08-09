@@ -38,13 +38,18 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
     .eq('user_id', session.user.id)
     .order('id')
 
-    const { data: profiles } = await supabase
+  const { data: profiles } = await supabase
     .from('profiles')
     .select(`username, display_name, avatar_url`)
     .eq('id', session.user.id)
     .single()
 
-  return { session, messages, profiles }
+  
+  const { data: chatbots } = await supabase
+    .from('chatbots')
+    .select()
+
+  return { session, messages, profiles, chatbots }
 
 }) satisfies PageServerLoad
 

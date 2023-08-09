@@ -7,9 +7,16 @@
   import Close from "$lib/assets/Close.svelte";
   import { clickOutside } from '$lib/_includes/util';
 
+  type ChatBot = {
+    sender_id: number,
+    name_en: string,
+    name_jp: string
+  }
+
   export let username:string = "";
 	export let display_name:string = "";
 	export let avatar_url:string = "";
+  export let chatbots:ChatBot[];
   let loading:boolean;
   let settingsModal:HTMLDialogElement;
 
@@ -117,8 +124,18 @@
         </div>
       </header>
       <ul>
+        {#if chatbots}
+          {#each chatbots as {sender_id, name_en, name_jp}, i }
+          <li data-sender={sender_id}>
+            <button type="button">
+              <div>{name_en}</div>
+              <div>{name_jp}</div>
+            </button>
+          </li>
+          {/each}
+        {/if}
         <!-- TODO: Add back items later -->
-        <!-- {#each drawerItems as {icon, text} }
+        {#each drawerItems as {icon, text} }
           <li data-label={text}>
             <button type="button">
               <div class="icon-wrapper">
@@ -127,7 +144,7 @@
               <span>{text}</span>
             </button>
           </li>
-        {/each} -->
+        {/each}
 
         <!-- TODO: Remove functionality for mobile, add back later -->
         <!-- <li data-label="Expand" class="resize">
@@ -233,7 +250,7 @@
   }
 
   .profile {
-    padding-bottom: 32px;
+    padding: 0 0 32px 8px;
     display: flex;
     align-items: center;
     gap: 12px;
