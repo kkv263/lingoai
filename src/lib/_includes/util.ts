@@ -23,3 +23,7 @@ export const clickOutside = (
     },
   };
 }
+
+export const convertTimestampsToLocale = (time:string) => {
+ return new Date(time).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })
+}

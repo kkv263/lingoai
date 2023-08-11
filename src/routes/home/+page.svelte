@@ -4,7 +4,7 @@
  	import SendIcon from '$lib/assets/SendIcon.svelte';
 	import { tokenize } from 'wanakana';
   import Message from '$lib/components/Message.svelte';
-	import SideDrawer from '$lib/components/SideDrawer.svelte';
+	import SideDrawer from '$lib/components/SideDrawer/SideDrawer.svelte';
 	import Menu from '$lib/assets/Menu.svelte';
 
 	export let data;
@@ -14,7 +14,7 @@
 	let messagesContainer: HTMLDivElement;
 	let chatContainer: HTMLDivElement;
 	let messagesInput: HTMLInputElement;
-	let speakerName: string = 'リンゴ';
+	let speakerName: string = `${data.lastMessages[0]?.name_en} (${data.lastMessages[0]?.name_jp})`;
 	let child:any;
 
 	onMount(() => {
@@ -54,8 +54,7 @@
   <div>You are signed in</div>  -->
 <!-- 
 	<div>{JSON.stringify(tokenize('アメリカから来た友達こんにちは', { detailed: true }))}</div> -->
-
-	<SideDrawer on:collapse={handleCollapse} {...data.profiles} chatbots={data.chatbots} bind:this={child}/>
+	<SideDrawer on:collapse={handleCollapse} {...data.profiles} lastMessages={data.lastMessages} bind:this={child}/>
 	<div class="chat__container" bind:this={chatContainer} data-collapsed="false">
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
@@ -65,7 +64,7 @@
 			<ul class="messages__list" >
 				{#if data.messages}
 					{#each data.messages as message, i }
-						<Message {...message} i={i}/>
+						<Message {...message} i={i} userid={data.profiles?.id}/>
 					{/each}
 				{/if}
 			</ul>

@@ -6,17 +6,12 @@
   import Cog from "$lib/assets/Cog.svelte";
   import Close from "$lib/assets/Close.svelte";
   import { clickOutside } from '$lib/_includes/util';
-
-  type ChatBot = {
-    sender_id: number,
-    name_en: string,
-    name_jp: string
-  }
+  import MessageButton from './MessageButton.svelte';
 
   export let username:string = "";
 	export let display_name:string = "";
 	export let avatar_url:string = "";
-  export let chatbots:ChatBot[];
+  export let lastMessages:any;
   let loading:boolean;
   let settingsModal:HTMLDialogElement;
 
@@ -124,14 +119,9 @@
         </div>
       </header>
       <ul>
-        {#if chatbots}
-          {#each chatbots as {sender_id, name_en, name_jp}, i }
-          <li data-sender={sender_id}>
-            <button type="button">
-              <div>{name_en}</div>
-              <div>{name_jp}</div>
-            </button>
-          </li>
+        {#if lastMessages}
+          {#each lastMessages as msg, i}
+           <MessageButton {...msg} i={i} active={i===0} />
           {/each}
         {/if}
         <!-- TODO: Add back items later -->
@@ -145,16 +135,6 @@
             </button>
           </li>
         {/each}
-
-        <!-- TODO: Remove functionality for mobile, add back later -->
-        <!-- <li data-label="Expand" class="resize">
-          <button type="button" on:click={toggleCollapse}>
-            <div class="icon-wrapper">
-              <ArrowRight width="24px" height="24px"/>
-            </div>
-            <span>Collapse</span>
-          </button>
-        </li> -->
       </ul>
     </div>
   </section>
@@ -433,14 +413,6 @@
     align-items: center;
     flex: 1 0 24px;
     max-width: 24px;
-  }
-
-  .resize {
-    margin-top: auto;
-    .icon-wrapper {
-      transition: all .3s ease;
-      transform: rotate(-180deg);
-    }
   }
 
   button {

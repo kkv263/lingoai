@@ -40,7 +40,7 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
 
   const { data: profiles } = await supabase
     .from('profiles')
-    .select(`username, display_name, avatar_url`)
+    .select(`username, display_name, avatar_url, id`)
     .eq('id', session.user.id)
     .single()
 
@@ -49,7 +49,17 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
     .from('chatbots')
     .select()
 
-  return { session, messages, profiles, chatbots }
+  let lastMessages = [];
+
+  if (chatbots && messages) {
+    for (let index = 0; index < chatbots.length; index++) {
+      lastMessages.push({...(messages.findLast(el => el.sender_id === chatbots[index].uuid)), name_en: chatbots[index].name_en, name_jp:chatbots[index].name_jp})
+    }
+  }
+
+  lastMessages = lastMessages.sort((a, b) => (b.id) - (a.id));
+
+  return { session, messages, profiles, lastMessages }
 
 }) satisfies PageServerLoad
 
@@ -87,7 +97,7 @@ export const actions = {
       ...(!isMsgJapanese && {content_source_lang: message}),
       ...(isMsgJapanese && {content_target_lang: message}),
       created_at: new Date(),
-      sender_id: 0
+      sender_id: session?.user.id,
     }, {
       user_id: session?.user.id,
       content: chatMessage.text,

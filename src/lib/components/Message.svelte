@@ -6,8 +6,10 @@
   import { isJapanese } from 'wanakana';
   import PlayCircle from '$lib/assets/PlayCircle.svelte';
   import PauseCircle from '$lib/assets/PauseCircle.svelte';
+	import { convertTimestampsToLocale } from '$lib/_includes/util';
 
-	export let sender_id:number;
+	export let sender_id:string;
+	export let userid:string;
 	export let content:string;
 	export let content_target_lang:string;
 	export let content_source_lang:string;
@@ -43,7 +45,7 @@
 		audioElement.currentTime = 0;
 	}
 
-	const japaneseAudio = async(val:string, sender_id:number) => {
+	const japaneseAudio = async(val:string, sender_id:string) => {
 		isAudioLoading = true;
 
 		if (audio) {
@@ -105,7 +107,7 @@
 
 					analyser.getByteFrequencyData(dataArray);
 
-					ctx.fillStyle = sender_id === 0 ? "#347FC4" : "#FFA16A";
+					ctx.fillStyle = sender_id === userid ? "#347FC4" : "#FFA16A";
 					ctx.fillRect(0, 0, width, height);
 
 					for (var i = 0; i < bufferLength; i++) {
@@ -137,7 +139,7 @@
   
 </script>
 
-<li class={`message__msg message__msg--${sender_id != 0 ? 'left' : 'right'}`} in:fly="{{ y: 50, duration: 500 }}" out:fade>
+<li class={`message__msg message__msg--${sender_id != userid ? 'left' : 'right'}`} in:fly="{{ y: 50, duration: 500 }}" out:fade>
   <span class="message__options">
     <form 
       method="post"
@@ -195,7 +197,7 @@
 	<audio autoPlay controls bind:this={audioElement}>
 		<source type='audio/wav' />
 	</audio> 
-  <span class="message__time">{new Date(created_at).toLocaleTimeString('en-GB', { hour: "2-digit", minute: "2-digit" })}</span>
+  <span class="message__time">{convertTimestampsToLocale(created_at)}</span>
 </li>
 
 <style lang="scss">
