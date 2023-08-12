@@ -1,15 +1,15 @@
 <script lang="ts">
   import { convertTimestampsToLocale } from '$lib/_includes/util';
-
+  import { activeReceiverState } from '$lib/stores/activeReceiverStore.js'
   export let name_en:string;
   export let name_jp:string
-  export let active:boolean;
   export let content:string;
   export let created_at:string;
+  export let bot_id: string;
 </script>
 
-<li class="sender" data-active={active}>
-  <button class="sender__button" type="button">
+<li class="sender" data-id={bot_id} data-active={bot_id === $activeReceiverState}>
+  <button class="sender__button" type="button" on:click={() => {$activeReceiverState = bot_id }}>
     <div class="sender__info">
       <div class="sender__name">{name_en} ({name_jp})</div>
       <div class="sender__time">{convertTimestampsToLocale(created_at)}</div>

@@ -121,7 +121,7 @@
       <ul>
         {#if lastMessages}
           {#each lastMessages as msg, i}
-           <MessageButton {...msg} i={i} active={i===0} />
+            <MessageButton {...msg} i={i} />
           {/each}
         {/if}
         <!-- TODO: Add back items later -->

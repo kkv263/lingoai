@@ -6,6 +6,7 @@
   import Message from '$lib/components/Message.svelte';
 	import SideDrawer from '$lib/components/SideDrawer/SideDrawer.svelte';
 	import Menu from '$lib/assets/Menu.svelte';
+	import { activeReceiverState } from '$lib/stores/activeReceiverStore.js'
 
 	export let data;
 
@@ -16,6 +17,8 @@
 	let messagesInput: HTMLInputElement;
 	let speakerName: string = `${data.lastMessages[0]?.name_en} (${data.lastMessages[0]?.name_jp})`;
 	let child:any;
+	let userid:string = data.profiles?.id;
+	$activeReceiverState = data.lastMessages[0]?.sender_id === userid ? data.lastMessages[0]?.receiver_id : data.lastMessages[0]?.sender_id;
 
 	onMount(() => {
 		scrollToBottom();
@@ -59,12 +62,14 @@
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
 				<button on:click={toggleMenu} type="button" class="chat__menu"><Menu width={'24px'} height={'24px'}/></button>
-				<div>Chatting with: {speakerName}</div>
+				<div>Chatting with: {speakerName}{$activeReceiverState}</div>
 			</div>
 			<ul class="messages__list" >
 				{#if data.messages}
 					{#each data.messages as message, i }
-						<Message {...message} i={i} userid={data.profiles?.id}/>
+						{#if message.sender_id === $activeReceiverState || message.receiver_id === $activeReceiverState}
+							<Message {...message} i={i} userid={userid}/>
+						{/if}
 					{/each}
 				{/if}
 			</ul>
@@ -141,6 +146,7 @@
 	}
 	
 	.messages__list {
+		min-height: calc(100vh - 128px);
 		list-style: none;
 		color: #fff;
 		padding-left: 0;
@@ -150,6 +156,7 @@
 	}
 
 	.message__input-container {
+		margin-top: auto;
 		position: sticky;
 		bottom: 0;
 		left: 0;

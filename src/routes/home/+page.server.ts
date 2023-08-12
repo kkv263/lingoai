@@ -34,7 +34,7 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
 
   const { data: messages } = await supabase
     .from('messages')
-    .select(`content, created_at, id, content_target_lang, content_source_lang, sender_id`)
+    .select(`content, created_at, id, content_target_lang, content_source_lang, sender_id, receiver_id`)
     .eq('user_id', session.user.id)
     .order('id')
 
@@ -53,7 +53,7 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
 
   if (chatbots && messages) {
     for (let index = 0; index < chatbots.length; index++) {
-      lastMessages.push({...(messages.findLast(el => el.sender_id === chatbots[index].uuid)), name_en: chatbots[index].name_en, name_jp:chatbots[index].name_jp})
+      lastMessages.push({...(messages.findLast(el => el.sender_id === chatbots[index].uuid)), bot_id: chatbots[index].uuid, name_en: chatbots[index].name_en, name_jp:chatbots[index].name_jp})
     }
   }
 
