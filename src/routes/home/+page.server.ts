@@ -6,6 +6,7 @@ import { isJapanese } from 'wanakana';
 import fs from 'fs';
 import path from 'path';
 
+
 import { OpenAI } from "langchain/llms/openai";
 import { OPENAI_API_KEY } from '$env/static/private';
 
@@ -64,7 +65,6 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
 }) satisfies PageServerLoad
 
 const generateMessage = async (message:string) => {
-
   const chat = new ChatOpenAI({ temperature: 0 });
   const response = await chat.call([
     new SystemChatMessage(
@@ -81,13 +81,13 @@ export const actions = {
   send: async ({ request, locals: { supabase, getSession } }) => {
     const formData = await request.formData()
     const message = formData.get('msg') as string
+    const receiver = formData.get('receiver') as string
     const isMsgJapanese = isJapanese(message);
 
     const authKey = process.env.NODE_ENV === 'production' ? process.env.DEEPL_API_KEY as string : DEEPL_API_KEY;
     const translator = new deepl.Translator(authKey);
 
     const translatedMsg = !isMsgJapanese ? await translator.translateText(message, 'en', 'ja') : {text: message};
-
     const session = await getSession()
     const chatMessage = await generateMessage(translatedMsg.text)
 
@@ -98,12 +98,14 @@ export const actions = {
       ...(isMsgJapanese && {content_target_lang: message}),
       created_at: new Date(),
       sender_id: session?.user.id,
+      receiver_id: receiver
     }, {
       user_id: session?.user.id,
       content: chatMessage.text,
       content_target_lang: chatMessage.text,
       created_at: new Date(),
-      sender_id: 1
+      sender_id: receiver,
+      receiver_id: session?.user.id,
     }])
 
     if (error) {

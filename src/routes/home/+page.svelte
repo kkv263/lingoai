@@ -6,11 +6,12 @@
   import Message from '$lib/components/Message.svelte';
 	import SideDrawer from '$lib/components/SideDrawer/SideDrawer.svelte';
 	import Menu from '$lib/assets/Menu.svelte';
-	import { activeReceiverState } from '$lib/stores/activeReceiverStore.js'
+	import { activeReceiverState } from '$lib/stores/activeReceiverStore'
 
 	export let data;
 
   let audio:any;
+	let messagesValue: string;
 	let loading = false;
 	let messagesContainer: HTMLDivElement;
 	let chatContainer: HTMLDivElement;
@@ -33,13 +34,16 @@
 
 	const handleSubmit: SubmitFunction = () => {
 		loading = true;
+		setTimeout(() => {
+			scrollToBottom();
+		}, 500);
 		return async ({ update }) => {
 			update();
 			loading = false;
 			// TODO: Find a better way to scroll to bottom after message is sent
 			setTimeout(() => {
 				scrollToBottom();
-			}, 500);
+			}, 1000);
 		}
 	}
 
@@ -62,7 +66,7 @@
 		<div class="messages__container" bind:this={messagesContainer}>
 			<div class="chat__top">
 				<button on:click={toggleMenu} type="button" class="chat__menu"><Menu width={'24px'} height={'24px'}/></button>
-				<div>Chatting with: {speakerName}{$activeReceiverState}</div>
+				<div>Chatting with: {speakerName}</div>
 			</div>
 			<ul class="messages__list" >
 				{#if data.messages}
@@ -72,12 +76,24 @@
 						{/if}
 					{/each}
 				{/if}
+
+				{#if loading}
+					<!-- <Message content={messagesValue} sender_id={userid} created_at={new Date().toString()} content_source_lang={""} i={0} content_target_lang={""} id={""} userid={userid}/> -->
+					<li class="message__loader">
+						<div class="message__loading">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</li>
+				{/if}
 			</ul>
 			<form class="message__input-container"
 				method="post"
 				action="?/send"
 				use:enhance={handleSubmit}>
-				<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom} bind:this={messagesInput}>
+				<input id="msg" name="msg" class="message__input" on:focus={scrollToBottom} bind:this={messagesInput} bind:value={messagesValue}>
+				<input id="receiver" name="receiver" hidden value={$activeReceiverState}>
 				<button class="message__send" type="submit" title="Send Message">
 					<span>Send</span>
 					<SendIcon width={'24px'} height={'24px'}/>
@@ -88,6 +104,10 @@
 </div>
 
 <style lang="scss">
+	[hidden] {
+		display: none;
+	}
+
 	.chat__container {
 		margin-left: 64px;
 		width: calc(100% - 64px);
@@ -215,4 +235,49 @@
 		}
 	}
 
+	.message__loader {
+		border-radius: 12px;
+    padding: 16px;
+    min-height: 54px;
+    text-align: left;
+		background-color: #999;
+		border-top-left-radius: 0;
+		width: 80px;
+	}
+
+	.message__loading {
+				display: inline-flex;
+				align-items: center;
+				justify-content: flex-start;
+				span {
+					display: block;
+					width: 10px;
+					height: 10px;
+					border-radius: 50%;
+					opacity: .5;
+					background-color: #fff;
+					margin: 5px 4px;
+					animation: typing 1000ms ease-in-out infinite;
+    			animation-delay: 3600ms;
+
+					&:nth-child(1) {
+						animation-delay: 0ms;
+					}
+						
+					&:nth-child(2) {
+						animation-delay: 333ms;
+					}
+						
+					&:nth-child(3) {
+						animation-delay: 666ms;
+					}
+				}
+			}
+
+	@keyframes typing {
+		0% {scale:1;}
+		33% {scale:1;}
+		50% {scale:1.4;}
+		100% {scale:1;}
+	}
 </style>

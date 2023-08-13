@@ -120,8 +120,8 @@
       </header>
       <ul>
         {#if lastMessages}
-          {#each lastMessages as msg, i}
-            <MessageButton {...msg} i={i} />
+          {#each lastMessages as msg}
+            <MessageButton {...msg} />
           {/each}
         {/if}
         <!-- TODO: Add back items later -->
